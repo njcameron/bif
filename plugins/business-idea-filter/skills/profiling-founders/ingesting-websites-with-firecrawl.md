@@ -34,7 +34,9 @@ If no Firecrawl MCP is present but `FIRECRAWL_API_KEY` is set in the environment
 script:
 
 ```bash
-node scripts/ingest-website.mjs "https://the-founders-site.com"
+# ${CLAUDE_SKILL_DIR} = this skill's own directory; resolves correctly whether in local
+# development or installed as a plugin, regardless of the working directory.
+node "${CLAUDE_SKILL_DIR}/scripts/ingest-website.mjs" "https://the-founders-site.com"
 ```
 
 It calls the Firecrawl REST API, prints the page as markdown to stdout, and exits non-zero with a

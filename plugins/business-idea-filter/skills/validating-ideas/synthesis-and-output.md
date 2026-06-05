@@ -40,9 +40,10 @@ structure, never on parsed prose. Shape:
 - **`weighted_total`** — sum of `score × weight` across lenses. It's a relative signal for *this*
   founder at *this* tier, not an absolute grade — don't over-index on the exact number.
 
-A helper script, `scripts/score.mjs`, computes `gate_status` and `weighted_total` from the gate
-results and lens entries so the math is consistent and auditable. Use it rather than doing the
-arithmetic by hand.
+A helper script, `${CLAUDE_SKILL_DIR}/scripts/score.mjs`, computes `gate_status` and
+`weighted_total` from the gate results and lens entries so the math is consistent and auditable.
+Use it (invoked with that `${CLAUDE_SKILL_DIR}` path so it resolves when installed as a plugin)
+rather than doing the arithmetic by hand.
 
 ## The terminal synthesis output
 

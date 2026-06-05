@@ -118,7 +118,9 @@ Read `./synthesis-and-output.md` and `./ambition-tier-weighting.md`. Apply the t
 compute the scorecard with the helper:
 
 ```bash
-node scripts/score.mjs "$IDEA_DIR/scorecard.json"   # fills gate_status + weighted_total
+# ${CLAUDE_SKILL_DIR} resolves to this skill's own directory — works whether the suite is
+# in local development or installed as a plugin, regardless of the working directory.
+node "${CLAUDE_SKILL_DIR}/scripts/score.mjs" "$IDEA_DIR/scorecard.json"   # fills gate_status + weighted_total
 ```
 
 Then produce the five-part terminal output: **verdict** (framed for the tier) · **per-lens
