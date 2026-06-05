@@ -1,0 +1,15 @@
+# Personal idea-board data must never be committed — it lives in the user's home
+# directory by default (~/idea-board), but guard against it being created or
+# symlinked into the repo, and against accidental local profiles/ideas.
+idea-board/
+**/founder-profile.md
+**/idea-board/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Node
+node_modules/
