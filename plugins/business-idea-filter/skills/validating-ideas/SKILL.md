@@ -75,11 +75,15 @@ the brain-dump is genuinely ambiguous — don't interrogate; the stress test doe
 
 ### 3. Obvious-kill pre-screen
 
-Before spending any research budget, check the idea against the founder's hard gates (read severities
-from the profile). If it plainly trips a `kill` gate — requires SOC 2, is business-critical, only
-closes via enterprise sales when `high_touch_sales: kill` — surface it now and offer to stop or
-continue anyway. Don't burn tokens researching a dead idea. Write results to the `prescreen` section
-and seed `scorecard.json`'s `hard_gates`.
+Before spending any research budget, check the idea against the founder's hard gates. **Iterate over
+the gates actually defined in the profile's `rubric.hard_gates` — read both the gate set and each
+severity from the profile, not from a fixed list.** The profile may rename, drop, or add gates, and
+its severities are authoritative. See `./lens-catalog.md` for what the standard gate names mean (and
+how to handle custom ones). If the idea plainly trips a `kill`-severity gate — e.g. requires SOC 2,
+is business-critical, or only closes via enterprise sales when that founder set `high_touch_sales:
+kill` — surface it now and offer to stop or continue anyway. Don't burn tokens researching a dead
+idea. Write results to the `prescreen` section and seed `scorecard.json`'s `hard_gates` with one
+entry per gate the profile defines (each carrying its `result` and the profile's `severity`).
 
 ### 4. Stress test (adversary voice)
 

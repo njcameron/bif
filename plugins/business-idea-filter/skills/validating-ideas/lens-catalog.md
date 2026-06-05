@@ -11,19 +11,29 @@ bootstrapper lens).
 
 ## Hard gates (checked structurally, never on parsed prose)
 
-Each gate's **severity comes from the founder profile's `rubric.hard_gates`** (`kill`, `penalty`, or
-`flag`). The pre-screen and synthesis branch on those values — they do not re-decide severity.
+**The founder profile's `rubric.hard_gates` is the single source of truth — read the gates from
+there at runtime, do not work from a fixed list.** Iterate over whatever keys the profile defines:
+each entry is `gate_name: severity` where severity is `kill`, `penalty`, or `flag`. A founder may
+rename, drop, or **add** gates (e.g. `regulatory_risk: kill`, `platform_dependency: penalty`); the
+pre-screen and synthesis must honor exactly the set in the profile, using its severities verbatim.
+Never re-decide a severity here, and never check a gate the profile doesn't list.
 
-| Gate | Kill/flag condition | Default severity | Source |
-|------|--------------------|------------------|--------|
-| `soc2_required` | Can't be sold without SOC 2 / heavy compliance | kill | founder rubric |
-| `business_critical` | Downtime = customer catastrophe | kill | founder rubric |
-| `high_touch_sales` | Only closes via calls/demos | penalty | founder rubric (configurable) |
-| `viable_gross_margin` | COGS/inference eats an unviable share of price at the target band | kill | Lean / unit economics |
-| `price_band_fit` | Can't realistically price in the founder's band | flag (tier-sensitive) | founder rubric |
+The table below is a **glossary** — it explains what the *standard* gate names mean so you can
+evaluate the idea against them. It is NOT the active list and NOT the severity source; those come
+from the profile. (The defaults a profile starts with are documented in
+`profiling-founders/founder-profile-schema.md`, which `profiling-founders` uses when it first
+writes the profile.)
 
-The `high_touch_sales` gate is a one-word config: `penalty` by default (heavy score hit, not fatal),
-flip to `kill` in the profile if the founder treats sales calls as a dealbreaker.
+| Gate name | What tripping it means |
+|-----------|------------------------|
+| `soc2_required` | The idea can't be sold without SOC 2 / heavy compliance |
+| `business_critical` | Downtime would be a customer catastrophe |
+| `high_touch_sales` | It only closes via sales calls / demos / a heavy enterprise motion |
+| `viable_gross_margin` | COGS/inference eats an unviable share of price at the target band |
+| `price_band_fit` | It can't realistically be priced inside the founder's band |
+
+If the profile contains a gate name not in this glossary, evaluate it from its name and any note the
+founder left in the profile body — it's a deliberate custom gate, not an error.
 
 ## Weighted lenses (score 0–5 each, with a one-line rationale)
 

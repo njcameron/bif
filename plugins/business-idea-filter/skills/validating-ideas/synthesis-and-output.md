@@ -32,9 +32,11 @@ structure, never on parsed prose. Shape:
 }
 ```
 
-- **`hard_gates`** — each gate carries its `result` (`pass` | `fail`) and the `severity` read from
-  the founder profile. `gate_status` is computed from these: `killed` if any `kill`-severity gate
-  failed; `flagged` if only `penalty`/`flag` gates failed; `clear` otherwise.
+- **`hard_gates`** — one entry per gate **defined in the founder profile** (the example above is
+  illustrative, not a fixed set — build this object by iterating the profile's `rubric.hard_gates`).
+  Each entry carries its `result` (`pass` | `fail`) and the `severity` copied verbatim from the
+  profile. `gate_status` is computed from these: `killed` if any `kill`-severity gate failed;
+  `flagged` if only `penalty`/`flag` gates failed; `clear` otherwise.
 - **`lenses`** — one entry per weighted lens scored, with the 0–5 `score`, the tier `weight` applied,
   a one-line `rationale`, and the `evidence` file where the claim rests on external data.
 - **`weighted_total`** — sum of `score × weight` across lenses. It's a relative signal for *this*
