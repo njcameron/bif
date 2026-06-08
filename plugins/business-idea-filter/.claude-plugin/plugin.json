@@ -1,6 +1,6 @@
 {
   "name": "business-idea-filter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pressure-test business ideas against your own founder profile and rubric. A conversational idea board: it interviews you, runs an adversarial office-hours stress test, fans out competitor and SEO research, scores the idea against a weighted rubric tuned to your ambition tier, and ends with the single riskiest assumption plus the cheapest experiment to test it this week. Strategy only — it does not plan implementation.",
   "author": {
     "name": "Neil Cameron",
