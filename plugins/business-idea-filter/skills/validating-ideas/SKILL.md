@@ -35,15 +35,9 @@ Each idea is a **folder**, not a file — this is what makes a verdict auditable
 the root and create the idea folder up front:
 
 ```bash
-# Resolve the idea-board root. Precedence:
-#   1. $IDEA_BOARD_ROOT, if set                                    (explicit override)
-#   2. the working directory, if it already holds a board          (founder-profile.md or ideas/)
-#   3. the global ~/idea-board, if a profile already lives there    (legacy/global boards keep working)
-#   4. otherwise the working directory                             (fresh setup lands where you work)
-if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
-elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
-elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
-else ROOT="$PWD"; fi
+# The board lives in the working directory you launched Claude Code from.
+# Set $IDEA_BOARD_ROOT to pin it to a fixed location instead.
+ROOT="${IDEA_BOARD_ROOT:-$PWD}"
 IDEAS="$ROOT/ideas"
 # slug = date-prefixed, sortable, e.g. 2026-06-04-mssp-questionnaire-copilot
 IDEA_DIR="$IDEAS/<YYYY-MM-DD>-<slug>"
@@ -73,13 +67,9 @@ dependencies are warnings: the session still runs, the SEO stage just degrades.
 **a. Founder profile** (required) — resolve the root and look for the profile:
 
 ```bash
-# Same root resolution as the persisting block above (env → working dir with a board →
-# existing global board → working dir).
-if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
-elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
-elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
-else ROOT="$PWD"; fi
-[ -f "$ROOT/founder-profile.md" ] && echo "profile: OK ($ROOT/founder-profile.md)" || echo "profile: MISSING"
+# Same resolution as the persisting block above: working directory by default, $IDEA_BOARD_ROOT to override.
+ROOT="${IDEA_BOARD_ROOT:-$PWD}"
+[ -f "$ROOT/founder-profile.md" ] && echo "profile: OK ($ROOT/founder-profile.md)" || echo "profile: MISSING ($ROOT/founder-profile.md)"
 ```
 
 **b. SEO toolkit** (optional) — the `analyzing-seo-landscape` stage routes to the `claude-seo:*`
@@ -95,7 +85,7 @@ Report a compact status block, e.g.:
 
 ```
 Pre-flight:
-  ✓ Founder profile    ~/idea-board/founder-profile.md
+  ✓ Founder profile    ./founder-profile.md
   ⚠ SEO toolkit        claude-seo plugin not found — SEO stage will be qualitative-only
   ⚠ DataForSEO MCP     not connected — no live keyword data
 ```

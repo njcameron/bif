@@ -30,23 +30,17 @@ This runs in two situations: **first-time setup** (no profile exists) and **upda
 background, goals, criteria, or ambition changed). Check first:
 
 ```bash
-# Resolve the idea-board root. Precedence:
-#   1. $IDEA_BOARD_ROOT, if set                                    (explicit override)
-#   2. the working directory, if it already holds a board          (founder-profile.md or ideas/)
-#   3. the global ~/idea-board, if a profile already lives there    (legacy/global boards keep working)
-#   4. otherwise the working directory                             (fresh setup lands where you work)
-if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
-elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
-elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
-else ROOT="$PWD"; fi
+# The board lives in the working directory you launched Claude Code from.
+# Set $IDEA_BOARD_ROOT to pin it to a fixed location instead.
+ROOT="${IDEA_BOARD_ROOT:-$PWD}"
 PROFILE="$ROOT/founder-profile.md"
 [ -f "$PROFILE" ] && echo "EXISTS: $PROFILE" || echo "NONE: will create at $PROFILE"
 ```
 
-The resolver prefers the current working directory, so a `founder-profile.md` you've placed
-in the folder you opened Claude Code from is found automatically, and a fresh profile is created
-there rather than in a hidden global location. Set `IDEA_BOARD_ROOT` to pin the board to one fixed
-place across all projects.
+The board lives in the current working directory, so a `founder-profile.md` you've placed in the
+folder you opened Claude Code from is found automatically, and a fresh profile is created there
+rather than in a hidden global location. Set `IDEA_BOARD_ROOT` to pin the board to one fixed place
+across all projects.
 
 - **NONE** → run the full interview.
 - **EXISTS** → read it, ask what changed, and run only the relevant parts. Don't re-interview from
@@ -91,11 +85,8 @@ Before writing anything to disk:
    creating the directory if needed. On an update, preserve fields the founder didn't change.
 
 ```bash
-# Re-resolve the same way as the invocation check, so the write lands where the check looked.
-if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
-elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
-elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
-else ROOT="$PWD"; fi
+# Same resolution as the invocation check, so the write lands where the check looked.
+ROOT="${IDEA_BOARD_ROOT:-$PWD}"
 mkdir -p "$ROOT/ideas"
 # write the confirmed profile to "$ROOT/founder-profile.md"
 ```
