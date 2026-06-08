@@ -81,6 +81,12 @@ volume/difficulty data needs the DataForSEO MCP server connected. Check whether 
 are available to the session (tools named like `mcp__*dataforseo*`); use `ToolSearch` with the query
 `dataforseo` to confirm. Without it, the SEO read is qualitative only.
 
+**d. Firecrawl MCP** (optional) — the `researching-competitors` stage uses it to capture competitor
+pages as dated evidence, and `profiling-founders` uses it for website ingest. Check whether Firecrawl
+MCP tools are available to the session (tools named like `mcp__*firecrawl*`); use `ToolSearch` with
+the query `firecrawl` to confirm. Without it, competitor research falls back to web search/fetch and
+captures less reliable evidence.
+
 Report a compact status block, e.g.:
 
 ```
@@ -88,14 +94,16 @@ Pre-flight:
   ✓ Founder profile    ./founder-profile.md
   ⚠ SEO toolkit        claude-seo plugin not found — SEO stage will be qualitative-only
   ⚠ DataForSEO MCP     not connected — no live keyword data
+  ⚠ Firecrawl MCP      not connected — competitor research falls back to web fetch
 ```
 
 **Acting on the results:**
 - **profile MISSING** → stop and invoke `profiling-founders` first. Every stage reads the rubric and
   ambition tier, so there's nothing to score against without it.
-- **SEO toolkit and/or MCP missing** → warn once, tell the founder the SEO landscape stage (step 5)
-  will run as a qualitative-only read, and **continue**. Never block the evaluation on these; the
-  `analyzing-seo-landscape` subagent degrades gracefully on its own.
+- **any optional dependency missing** (SEO toolkit, DataForSEO MCP, Firecrawl MCP) → warn once, tell
+  the founder which research stage (step 5) degrades — SEO to a qualitative-only read, competitor
+  research to plain web fetch — and **continue**. Never block the evaluation on these; the research
+  subagents degrade gracefully on their own.
 
 On an OK profile, read it; hold the ambition tier and rubric in mind for the whole session.
 
