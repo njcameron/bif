@@ -35,7 +35,15 @@ Each idea is a **folder**, not a file — this is what makes a verdict auditable
 the root and create the idea folder up front:
 
 ```bash
-ROOT="${IDEA_BOARD_ROOT:-$HOME/idea-board}"
+# Resolve the idea-board root. Precedence:
+#   1. $IDEA_BOARD_ROOT, if set                                    (explicit override)
+#   2. the working directory, if it already holds a board          (founder-profile.md or ideas/)
+#   3. the global ~/idea-board, if a profile already lives there    (legacy/global boards keep working)
+#   4. otherwise the working directory                             (fresh setup lands where you work)
+if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
+elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
+elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
+else ROOT="$PWD"; fi
 IDEAS="$ROOT/ideas"
 # slug = date-prefixed, sortable, e.g. 2026-06-04-mssp-questionnaire-copilot
 IDEA_DIR="$IDEAS/<YYYY-MM-DD>-<slug>"
@@ -59,8 +67,13 @@ instructions. **Persist after every stage** — this gives crash-resume and re-r
 ### 1. Load the founder profile
 
 ```bash
-ROOT="${IDEA_BOARD_ROOT:-$HOME/idea-board}"
-[ -f "$ROOT/founder-profile.md" ] && echo "PROFILE OK" || echo "NO PROFILE"
+# Same root resolution as the persisting block above (env → working dir with a board →
+# existing global board → working dir).
+if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
+elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
+elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
+else ROOT="$PWD"; fi
+[ -f "$ROOT/founder-profile.md" ] && echo "PROFILE OK ($ROOT)" || echo "NO PROFILE"
 ```
 
 If **NO PROFILE**, stop and invoke `profiling-founders` first — every stage reads the profile's

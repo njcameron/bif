@@ -6,10 +6,14 @@ A different founder scores the same idea differently; the profile is what makes 
 
 ## Location and format
 
-- **Path:** `<idea-board-root>/founder-profile.md`, where the root resolves as
-  `${IDEA_BOARD_ROOT:-$HOME/idea-board}` (defaulting to `~/idea-board`). Every skill in the suite
-  resolves the root the same way, so the profile is found from anywhere. Set `IDEA_BOARD_ROOT` to
-  put it elsewhere (e.g. inside your Obsidian vault).
+- **Path:** `<idea-board-root>/founder-profile.md`. Every skill in the suite resolves the root the
+  same way, by this precedence: (1) `$IDEA_BOARD_ROOT` if set; (2) the current working directory if
+  it already holds a board (`founder-profile.md` or an `ideas/` folder); (3) the global
+  `~/idea-board` if a profile already lives there; (4) otherwise the current working directory. In
+  practice this means a profile you drop into — or create from — the folder you opened Claude Code in
+  is found automatically, existing `~/idea-board` boards keep working from anywhere, and
+  `IDEA_BOARD_ROOT` pins the board to one fixed place across all projects (e.g. inside your Obsidian
+  vault).
 - **Format:** Markdown with YAML frontmatter. The frontmatter holds the machine-readable fields
   (so the scorer can branch on structure); the prose body below it is room for nuance the
   founder wants recorded. This renders cleanly in Obsidian and stays hand-editable.
