@@ -64,7 +64,13 @@ instructions. **Persist after every stage** — this gives crash-resume and re-r
 
 ## The flow
 
-### 1. Load the founder profile
+### 1. Pre-flight check
+
+Before anything else, check the three prerequisites and report their status up front, so the founder
+knows what kind of evaluation they're getting. **Only the profile blocks** — the two SEO
+dependencies are warnings: the session still runs, the SEO stage just degrades.
+
+**a. Founder profile** (required) — resolve the root and look for the profile:
 
 ```bash
 # Same root resolution as the persisting block above (env → working dir with a board →
@@ -73,12 +79,35 @@ if [ -n "$IDEA_BOARD_ROOT" ]; then ROOT="$IDEA_BOARD_ROOT"
 elif [ -f "$PWD/founder-profile.md" ] || [ -d "$PWD/ideas" ]; then ROOT="$PWD"
 elif [ -f "$HOME/idea-board/founder-profile.md" ]; then ROOT="$HOME/idea-board"
 else ROOT="$PWD"; fi
-[ -f "$ROOT/founder-profile.md" ] && echo "PROFILE OK ($ROOT)" || echo "NO PROFILE"
+[ -f "$ROOT/founder-profile.md" ] && echo "profile: OK ($ROOT/founder-profile.md)" || echo "profile: MISSING"
 ```
 
-If **NO PROFILE**, stop and invoke `profiling-founders` first — every stage reads the profile's
-rubric and ambition tier, so there's nothing to score against without it. If **OK**, read it; hold
-the ambition tier and rubric in mind for the whole session.
+**b. SEO toolkit** (optional) — the `analyzing-seo-landscape` stage routes to the `claude-seo:*`
+skills. Check whether they're in your available-skills list (e.g. `claude-seo:seo-dataforseo`).
+This can't be tested from bash — inspect the skills available to you.
+
+**c. DataForSEO MCP** (optional) — even with the `claude-seo:*` skills present, live keyword
+volume/difficulty data needs the DataForSEO MCP server connected. Check whether DataForSEO MCP tools
+are available to the session (tools named like `mcp__*dataforseo*`); use `ToolSearch` with the query
+`dataforseo` to confirm. Without it, the SEO read is qualitative only.
+
+Report a compact status block, e.g.:
+
+```
+Pre-flight:
+  ✓ Founder profile    ~/idea-board/founder-profile.md
+  ⚠ SEO toolkit        claude-seo plugin not found — SEO stage will be qualitative-only
+  ⚠ DataForSEO MCP     not connected — no live keyword data
+```
+
+**Acting on the results:**
+- **profile MISSING** → stop and invoke `profiling-founders` first. Every stage reads the rubric and
+  ambition tier, so there's nothing to score against without it.
+- **SEO toolkit and/or MCP missing** → warn once, tell the founder the SEO landscape stage (step 5)
+  will run as a qualitative-only read, and **continue**. Never block the evaluation on these; the
+  `analyzing-seo-landscape` subagent degrades gracefully on its own.
+
+On an OK profile, read it; hold the ambition tier and rubric in mind for the whole session.
 
 ### 2. Capture and normalize the idea
 
